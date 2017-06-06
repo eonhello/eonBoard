@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.eon.mapper.UserMapper">
+
+	<select id="login" resultType="org.eon.domain.UserVO">
+		select uid, upw, uname from
+		tbl_user
+		where uid = #{uid} and upw = #{upw}
+	</select>
+
+	<update id="keepLogin">
+		update tbl_user
+		set sessionkey = #{sessionId},
+		sessionlimit = #{next}
+		where uid = #{uid}
+	</update>
+
+	<select id="checkUserWithSessionKey" resultType="org.eon.domain.UserVO">
+		select * from
+		tbl_user
+		where sessionkey = #{value} and sessionlimit > now()
+	</select>
+
+	<select id="userList" resultType="org.eon.domain.UserVO">
+		select uid, uname, umail,
+		regdate
+		from tbl_user
+		order by uname
+	</select>
+
+	<insert id="insertUser">
+		insert into tbl_user(uid, upw, uname, umail)
+		values(#{uid}, #{upw}, #{uname}, #{umail})
+	</insert>
+
+	<select id="loginCheck" resultType="String">
+		select uname
+		as userName
+		from tbl_user
+		where uid = #{uid} and upw = #{upw}
+	</select>
+
+	<select id="viewLogin" resultType="org.eon.domain.UserVO">
+		select
+		uid as userId,
+		uname as userName,
+		umail as userMail,
+		regdate as userRegdate
+		from tbl_user
+		where uid = #{uid} and upw = #{upw}
+	</select>
+
+	<select id="idDupCheck" resultType="int">
+		select count(uid)
+		from tbl_user
+		where uid = #{uid}
+	</select>
+
+
+
+</mapper>
